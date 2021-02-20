@@ -7,22 +7,22 @@
       "description": "Address",
       "type": "string",
       "minLength": 1,
-      "maxLength": 255
+      "maxLength": 50
     },
     "line2": {
       "type" : "string",
       "minLength" : 1,
-      "maxLength" : 255
+      "maxLength" : 50
     },
     "city" : {
       "type" : "string",
       "minLength" : 1,
-      "maxLength" : 255
+      "maxLength" : 50
     },
     "country" : {
       "type" : "string",
       "minLength" : 1,
-      "maxLength" : 255
+      "maxLength" : 50
     },
     "zip_code" : {
       "type" : "string",

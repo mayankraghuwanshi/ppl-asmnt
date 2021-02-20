@@ -47,7 +47,7 @@ public class Employee {
      */
     @JsonProperty("first_name")
     @JsonPropertyDescription("first name")
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 50)
     @NotNull
     private String firstName;
     /**
@@ -57,7 +57,7 @@ public class Employee {
      */
     @JsonProperty("last_name")
     @JsonPropertyDescription("last name")
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 50)
     @NotNull
     private String lastName;
     /**

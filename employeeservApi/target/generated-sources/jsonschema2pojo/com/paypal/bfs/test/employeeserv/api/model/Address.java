@@ -38,11 +38,11 @@ public class Address {
      */
     @JsonProperty("line1")
     @JsonPropertyDescription("Address")
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 50)
     @NotNull
     private String line1;
     @JsonProperty("line2")
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 50)
     private String line2;
     /**
      * 
@@ -50,7 +50,7 @@ public class Address {
      * 
      */
     @JsonProperty("city")
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 50)
     @NotNull
     private String city;
     /**
@@ -59,7 +59,7 @@ public class Address {
      * 
      */
     @JsonProperty("country")
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 50)
     @NotNull
     private String country;
     /**
