@@ -33,7 +33,6 @@ public class EmployeeResourceImpl implements EmployeeResource {
     @Override
     @PostMapping(value = "/v1/bfs/employees/")
     public ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee, BindingResult result){
-        System.out.println(employee);
         handleRequestError(result);
         Employee response = employeeService.createEmployee(employee);
         return new ResponseEntity<>(employee,HttpStatus.ACCEPTED);
@@ -41,9 +40,15 @@ public class EmployeeResourceImpl implements EmployeeResource {
     }
 
     private void handleRequestError(BindingResult result){
+        Map<String,String> customErrorMessage = new HashMap<>();
+        customErrorMessage.put("dateOfBirth","Please enter valid date of birth, pattern = DD/MM/YYYY");
         if(result.hasErrors() && result.getFieldErrors()!=null ){
             Map<String,String> errors = new HashMap<>();
             for(FieldError error : result.getFieldErrors()){
+                if(customErrorMessage.containsKey(error.getField())){
+                    errors.put(error.getField(),customErrorMessage.get(error.getField()));
+                    continue;
+                }
                 errors.put(
                         error.getField(),
                         error.getDefaultMessage());

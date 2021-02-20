@@ -6,6 +6,8 @@ public class ExceptionConstant {
     public static final String FAILED_TO_CAST_ADDRESS_STRING_TO_OBJECT = "FC5T0";
     public static final String FAILED_TO_CREATE_NEW_EMPLOYEE = "FCNE";
     public static final String EMPLOYEE_WITH_ID_NOT_FOUND = "Employee with id %d not found!";
+    public static final String FAILED_TO_CONVERT_DATE_OBJ_TO_STR = "FTCD0T5";
+    public static final String FAILED_TO_CONVERT_DATE_STR_TO_OBJ = "FTCD5T0";
 
 
 }

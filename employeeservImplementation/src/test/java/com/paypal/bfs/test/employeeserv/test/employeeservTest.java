@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.junit.Test;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -72,12 +71,12 @@ public class employeeservTest {
         entity.setAddress(ADDRESS_STRING);
         entity.setFirstName("Mayank");
         entity.setLastName("Raghuvanshi");
-        entity.setDateOfBirth(new Date());
+        entity.setDateOfBirth(service.dateStrToObj("12/08/1997"));
         when(repository.save(entity)).thenReturn(entity);
         Employee employee = new Employee();
         employee.setFirstName(entity.getFirstName());
         employee.setLastName(entity.getLastName());
-        employee.setDateOfBirth(entity.getDateOfBirth());
+        employee.setDateOfBirth(service.dateObjToStr(entity.getDateOfBirth()));
         employee.setAddress(service.mapAddressStrToObj(entity.getAddress()));
         assertEquals(employee,service.createEmployee(employee));
 

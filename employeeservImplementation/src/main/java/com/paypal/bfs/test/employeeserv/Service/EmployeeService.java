@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.paypal.bfs.test.employeeserv.Constants.ExceptionConstant;
 import javax.ws.rs.NotFoundException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 @Service
@@ -38,7 +40,7 @@ public class EmployeeService {
         Employee response = new Employee();
         response.setFirstName(employeeEntity.getFirstName());
         response.setLastName(employeeEntity.getLastName());
-        response.setDateOfBirth(employeeEntity.getDateOfBirth());
+        response.setDateOfBirth(dateObjToStr(employeeEntity.getDateOfBirth()));
         response.setAddress(mapAddressStrToObj(employeeEntity.getAddress()));
 
         logger.info("GetEmpById response {}", response);
@@ -50,7 +52,7 @@ public class EmployeeService {
         EmployeeEntity entityRequest = new EmployeeEntity();
         entityRequest.setFirstName(request.getFirstName());
         entityRequest.setLastName(request.getLastName());
-        entityRequest.setDateOfBirth(request.getDateOfBirth());
+        entityRequest.setDateOfBirth(dateStrToObj(request.getDateOfBirth()));
         entityRequest.setAddress(mapAddressObjToStr(request.getAddress()));
         EmployeeEntity entityResponse = employeeRepository.save(entityRequest);
         if(entityResponse == null){
@@ -60,7 +62,7 @@ public class EmployeeService {
         Employee response = new Employee();
         response.setLastName(entityResponse.getLastName());
         response.setFirstName(entityResponse.getFirstName());
-        response.setDateOfBirth(entityResponse.getDateOfBirth());
+        response.setDateOfBirth(dateObjToStr(entityResponse.getDateOfBirth()));
         response.setAddress(mapAddressStrToObj(entityResponse.getAddress()));
 
         logger.info("createEmployee response {}" , response);
@@ -92,6 +94,32 @@ public class EmployeeService {
             throw new InternalServerException(ExceptionConstant.FAILED_TO_CAST_ADDRESS_STRING_TO_OBJECT);
         }
         return obj;
+    }
+
+    public Date dateStrToObj(String str){
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = null;
+        try{
+            date = format.parse(str);
+        }
+        catch (Exception ex){
+            logger.error("Failed to convert date str to obj");
+            throw new InternalServerException(ExceptionConstant.FAILED_TO_CONVERT_DATE_STR_TO_OBJ);
+        }
+        return date;
+    }
+
+    public String dateObjToStr(Date date){
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        String str = "";
+        try{
+            str = format.format(date);
+        }
+        catch (Exception ex){
+            logger.error("Failed to convert date obj to str");
+            throw new InternalServerException(ExceptionConstant.FAILED_TO_CONVERT_DATE_OBJ_TO_STR);
+        }
+        return  str;
     }
 
 }
