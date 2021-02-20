@@ -1,4 +1,27 @@
 # Employee Service
+## prerequisite
+`JDK 8` </br>
+`maven 3.6.3` </br>
+`Ide` </br>
+
+## Steps
+1. clone this project using following command.
+```
+git clone https://github.com/mayankraghuwanshi/ppl-asmnt.git
+```
+2. Build this project.
+```
+cd ppl-asmnt 
+mvn clean install
+```
+3. Run this project.
+```
+cd employeeserviceImplementation
+mvn spring-boot:run
+```
+
+
+
 ## create new employee
 url : localhost:8080/v1/bfs/employees/ </br>
 method : <strong>POST</strong> </br>
