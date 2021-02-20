@@ -1,4 +1,7 @@
 # Employee Service
+
+This service is deployed at url : http://149.129.190.87:3000/v1/bfs/employees/1 , please find a postman collection [here](https://www.postman.com/collections/8e845bcdca8a36c17d3b) to test it out.
+
 ## prerequisite
 `JDK 8` </br>
 `maven 3.6.3` </br>
