@@ -233,4 +233,28 @@ public class Employee {
         return sb.toString();
     }
 
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = ((result* 31)+((this.firstName == null)? 0 :this.firstName.hashCode()));
+        result = ((result* 31)+((this.lastName == null)? 0 :this.lastName.hashCode()));
+        result = ((result* 31)+((this.address == null)? 0 :this.address.hashCode()));
+        result = ((result* 31)+((this.dateOfBirth == null)? 0 :this.dateOfBirth.hashCode()));
+        result = ((result* 31)+((this.id == null)? 0 :this.id.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if ((other instanceof Employee) == false) {
+            return false;
+        }
+        Employee rhs = ((Employee) other);
+        return (((((((this.firstName == rhs.firstName)||((this.firstName!= null)&&this.firstName.equals(rhs.firstName)))&&((this.lastName == rhs.lastName)||((this.lastName!= null)&&this.lastName.equals(rhs.lastName))))&&((this.address == rhs.address)||((this.address!= null)&&this.address.equals(rhs.address))))&&((this.dateOfBirth == rhs.dateOfBirth)||((this.dateOfBirth!= null)&&this.dateOfBirth.equals(rhs.dateOfBirth))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))));
+    }
+
 }

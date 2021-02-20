@@ -1,9 +1,9 @@
 com\paypal\bfs\test\employeeserv\Controller\EmployeeResourceImpl.class
+com\paypal\bfs\test\employeeserv\Entity\EmployeeEntity.class
 com\paypal\bfs\test\employeeserv\EmployeeservApplication.class
 com\paypal\bfs\test\employeeserv\Service\EmployeeService.class
 com\paypal\bfs\test\employeeserv\Exception\ErrorDetails.class
 com\paypal\bfs\test\employeeserv\Exception\ExceptionListener.class
 com\paypal\bfs\test\employeeserv\Exception\InvalidAddressException.class
 com\paypal\bfs\test\employeeserv\Exception\ValidationException.class
-com\paypal\bfs\test\employeeserv\Entiry\EmployeeEntity.class
 com\paypal\bfs\test\employeeserv\Repository\EmployeeRepository.class

@@ -211,4 +211,28 @@ public class Address {
         return sb.toString();
     }
 
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = ((result* 31)+((this.country == null)? 0 :this.country.hashCode()));
+        result = ((result* 31)+((this.zipCode == null)? 0 :this.zipCode.hashCode()));
+        result = ((result* 31)+((this.city == null)? 0 :this.city.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
+        result = ((result* 31)+((this.line2 == null)? 0 :this.line2 .hashCode()));
+        result = ((result* 31)+((this.line1 == null)? 0 :this.line1 .hashCode()));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if ((other instanceof Address) == false) {
+            return false;
+        }
+        Address rhs = ((Address) other);
+        return (((((((this.country == rhs.country)||((this.country!= null)&&this.country.equals(rhs.country)))&&((this.zipCode == rhs.zipCode)||((this.zipCode!= null)&&this.zipCode.equals(rhs.zipCode))))&&((this.city == rhs.city)||((this.city!= null)&&this.city.equals(rhs.city))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.line2 == rhs.line2)||((this.line2 != null)&&this.line2 .equals(rhs.line2))))&&((this.line1 == rhs.line1)||((this.line1 != null)&&this.line1 .equals(rhs.line1))));
+    }
+
 }

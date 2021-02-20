@@ -1,6 +1,6 @@
 package com.paypal.bfs.test.employeeserv.Repository;
 
-import com.paypal.bfs.test.employeeserv.Entiry.EmployeeEntity;
+import com.paypal.bfs.test.employeeserv.Entity.EmployeeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -2,18 +2,23 @@ package com.paypal.bfs.test.employeeserv.Service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paypal.bfs.test.employeeserv.Entiry.EmployeeEntity;
-import com.paypal.bfs.test.employeeserv.Exception.InvalidAddressException;
+import com.paypal.bfs.test.employeeserv.Entity.EmployeeEntity;
 import com.paypal.bfs.test.employeeserv.Repository.EmployeeRepository;
 import com.paypal.bfs.test.employeeserv.api.model.Address;
 import com.paypal.bfs.test.employeeserv.api.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.validation.ValidationException;
 import javax.ws.rs.NotFoundException;
 
 
 @Service
 public class EmployeeService {
+
+    private static final String EMP_NOT_FOUND_ERROR_MSG = "Employee with id %d not found!";
+    private static final String FAIL_TO_MAP_ADDRESS_STR_TO_OBJ = "Failed to parse Address!";
+    private static final String FAIL_TO_MAP_ADDRESS_OBJ_TO_STR = "Failed to parse Address";
 
 
     @Autowired
@@ -23,23 +28,14 @@ public class EmployeeService {
         EmployeeEntity employeeEntity = employeeRepository.getEmployeeById(id);
 
         if(employeeEntity == null){
-            throw new NotFoundException(String.format("Employee with id %d not found! ", id));
+            throw new NotFoundException(String.format(EMP_NOT_FOUND_ERROR_MSG, id));
         }
 
         Employee response = new Employee();
         response.setFirstName(employeeEntity.getFirstName());
         response.setLastName(employeeEntity.getLastName());
         response.setDateOfBirth(employeeEntity.getDateOfBirth());
-        Address address = null;
-
-        try{
-            address = new ObjectMapper().readValue(employeeEntity.getAddress(),Address.class);
-        }
-        catch (Exception ex){
-            throw new InvalidAddressException("Fail to parse Address!");
-        }
-
-        response.setAddress(address);
+        response.setAddress(mapAddressStrToObj(employeeEntity.getAddress()));
         return response;
     }
 
@@ -48,20 +44,39 @@ public class EmployeeService {
         request.setFirstName(employee.getFirstName());
         request.setLastName(employee.getLastName());
         request.setDateOfBirth(employee.getDateOfBirth());
-
-        try{
-            String address = new ObjectMapper().writeValueAsString(employee.getAddress());
-            request.setAddress(address);
-        }
-        catch (Exception ex){
-            throw new InvalidAddressException("Fail to parse Address!");
-        }
-
+        request.setAddress(mapAddressObjToStr(employee.getAddress()));
         EmployeeEntity entity = employeeRepository.save(request);
         Employee response = new Employee();
         response.setLastName(entity.getLastName());
         response.setFirstName(entity.getFirstName());
         response.setDateOfBirth(entity.getDateOfBirth());
+        response.setAddress(mapAddressStrToObj(entity.getAddress()));
         return response;
     }
+
+
+    public String mapAddressObjToStr(Address address){
+        String addressString = "";
+        try{
+            addressString =  new ObjectMapper().writeValueAsString(address);
+        }
+        catch (Exception ex){
+            throw new ValidationException(FAIL_TO_MAP_ADDRESS_OBJ_TO_STR);
+        }
+
+        return addressString;
+    }
+
+
+    public Address mapAddressStrToObj(String address){
+        Address obj = null;
+        try{
+            obj = new ObjectMapper().readValue(address,Address.class);
+        }
+        catch (Exception ex){
+            throw new ValidationException(FAIL_TO_MAP_ADDRESS_STR_TO_OBJ);
+        }
+        return obj;
+    }
+
 }
