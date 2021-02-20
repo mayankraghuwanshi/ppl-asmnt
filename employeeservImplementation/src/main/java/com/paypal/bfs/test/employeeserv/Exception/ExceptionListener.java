@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import java.util.Date;
+import javax.ws.rs.NotFoundException;
 
 
 @ControllerAdvice
@@ -16,14 +16,34 @@ public class ExceptionListener extends ResponseEntityExceptionHandler {
 
 
     @ExceptionHandler(value = {ValidationException.class})
-    public ResponseEntity<?> requestValidationException(ValidationException e , WebRequest request) {
-        return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorDetails> requestValidationException(ValidationException e , WebRequest request) {
+        ErrorDetails response = new ErrorDetails();
+        response.setErrors(e.getErrors());
+        response.setMessage(e.getMessage());
+        return new ResponseEntity<ErrorDetails>(response,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {NotFoundException.class})
+    public ResponseEntity<ErrorDetails> resourceNotFoundException(NotFoundException e , WebRequest request){
+        ErrorDetails errorDetails = new ErrorDetails();
+        errorDetails.setMessage(e.getMessage());
+        return new ResponseEntity<ErrorDetails>(errorDetails,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = {InternalServerException.class})
+    public ResponseEntity<ErrorDetails> handleInternalException(InternalServerException e , WebRequest request){
+        ErrorDetails response = new ErrorDetails();
+        response.setMessage(e.getMessage());
+        response.setCode(e.getCode());
+        return new ResponseEntity<ErrorDetails>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> globleExcpetionHandler(Exception ex, WebRequest request) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+        ErrorDetails errorDetails = new ErrorDetails();
+        errorDetails.setMessage("Internal server exception!");
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

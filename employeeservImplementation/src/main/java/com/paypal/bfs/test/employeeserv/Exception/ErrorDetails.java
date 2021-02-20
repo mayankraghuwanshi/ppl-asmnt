@@ -1,28 +1,20 @@
 package com.paypal.bfs.test.employeeserv.Exception;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
 
+import java.util.Date;
+import java.util.Map;
+
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorDetails {
 	private Date timestamp;
 	private String message;
-	private String details;
+	private String code;
+	private Map<String,String> errors;
 
-	public ErrorDetails(Date timestamp, String message, String details) {
-		super();
-		this.timestamp = timestamp;
-		this.message = message;
-		this.details = details;
-	}
-
-	public Date getTimestamp() {
-		return timestamp;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public String getDetails() {
-		return details;
+	public ErrorDetails(){
+		timestamp = new Date();
 	}
 }

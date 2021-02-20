@@ -3,54 +3,68 @@ package com.paypal.bfs.test.employeeserv.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paypal.bfs.test.employeeserv.Entity.EmployeeEntity;
+import com.paypal.bfs.test.employeeserv.Exception.InternalServerException;
 import com.paypal.bfs.test.employeeserv.Repository.EmployeeRepository;
 import com.paypal.bfs.test.employeeserv.api.model.Address;
 import com.paypal.bfs.test.employeeserv.api.model.Employee;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.validation.ValidationException;
+import com.paypal.bfs.test.employeeserv.Constants.ExceptionConstant;
 import javax.ws.rs.NotFoundException;
 
 
 @Service
 public class EmployeeService {
 
-    private static final String EMP_NOT_FOUND_ERROR_MSG = "Employee with id %d not found!";
-    private static final String FAIL_TO_MAP_ADDRESS_STR_TO_OBJ = "Failed to parse Address!";
-    private static final String FAIL_TO_MAP_ADDRESS_OBJ_TO_STR = "Failed to parse Address";
-
+    Logger logger = LoggerFactory.getLogger(EmployeeService.class);
 
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    public Employee getEmployeeById(Integer id){
-        EmployeeEntity employeeEntity = employeeRepository.getEmployeeById(id);
+    public Employee getEmployeeById(Integer employeeId){
+
+        logger.info("GetEmpById request with id " , employeeId);
+        EmployeeEntity employeeEntity = employeeRepository.getEmployeeById(employeeId);
 
         if(employeeEntity == null){
-            throw new NotFoundException(String.format(EMP_NOT_FOUND_ERROR_MSG, id));
+            logger.info("Employee not found!");
+            throw new NotFoundException(String.format(ExceptionConstant.EMPLOYEE_WITH_ID_NOT_FOUND,employeeId));
+
         }
+
+        logger.info("Employee entity {} ",employeeEntity);
 
         Employee response = new Employee();
         response.setFirstName(employeeEntity.getFirstName());
         response.setLastName(employeeEntity.getLastName());
         response.setDateOfBirth(employeeEntity.getDateOfBirth());
         response.setAddress(mapAddressStrToObj(employeeEntity.getAddress()));
+
+        logger.info("GetEmpById response {}", response);
         return response;
     }
 
-    public Employee createEmployee(Employee employee){
-        EmployeeEntity request = new EmployeeEntity();
-        request.setFirstName(employee.getFirstName());
-        request.setLastName(employee.getLastName());
-        request.setDateOfBirth(employee.getDateOfBirth());
-        request.setAddress(mapAddressObjToStr(employee.getAddress()));
-        EmployeeEntity entity = employeeRepository.save(request);
+    public Employee createEmployee(Employee request){
+        logger.info("createEmployee request {}",request);
+        EmployeeEntity entityRequest = new EmployeeEntity();
+        entityRequest.setFirstName(request.getFirstName());
+        entityRequest.setLastName(request.getLastName());
+        entityRequest.setDateOfBirth(request.getDateOfBirth());
+        entityRequest.setAddress(mapAddressObjToStr(request.getAddress()));
+        EmployeeEntity entityResponse = employeeRepository.save(entityRequest);
+        if(entityResponse == null){
+            logger.error("Failed to create employee {}",entityRequest);
+            throw new InternalServerException(ExceptionConstant.FAILED_TO_CREATE_NEW_EMPLOYEE);
+        }
         Employee response = new Employee();
-        response.setLastName(entity.getLastName());
-        response.setFirstName(entity.getFirstName());
-        response.setDateOfBirth(entity.getDateOfBirth());
-        response.setAddress(mapAddressStrToObj(entity.getAddress()));
+        response.setLastName(entityResponse.getLastName());
+        response.setFirstName(entityResponse.getFirstName());
+        response.setDateOfBirth(entityResponse.getDateOfBirth());
+        response.setAddress(mapAddressStrToObj(entityResponse.getAddress()));
+
+        logger.info("createEmployee response {}" , response);
         return response;
     }
 
@@ -61,7 +75,8 @@ public class EmployeeService {
             addressString =  new ObjectMapper().writeValueAsString(address);
         }
         catch (Exception ex){
-            throw new ValidationException(FAIL_TO_MAP_ADDRESS_OBJ_TO_STR);
+            logger.error("Failed to cast address object to string!");
+            throw new InternalServerException(ExceptionConstant.FAILED_TO_CAST_ADDRESS_OBJECT_TO_STRING);
         }
 
         return addressString;
@@ -74,7 +89,8 @@ public class EmployeeService {
             obj = new ObjectMapper().readValue(address,Address.class);
         }
         catch (Exception ex){
-            throw new ValidationException(FAIL_TO_MAP_ADDRESS_STR_TO_OBJ);
+            logger.error("Failed to cast address string to object!");
+            throw new InternalServerException(ExceptionConstant.FAILED_TO_CAST_ADDRESS_STRING_TO_OBJECT);
         }
         return obj;
     }

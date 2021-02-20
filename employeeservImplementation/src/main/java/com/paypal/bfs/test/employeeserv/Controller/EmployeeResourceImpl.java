@@ -1,5 +1,6 @@
 package com.paypal.bfs.test.employeeserv.Controller;
 
+import com.paypal.bfs.test.employeeserv.Exception.ValidationException;
 import com.paypal.bfs.test.employeeserv.Service.EmployeeService;
 import com.paypal.bfs.test.employeeserv.api.EmployeeResource;
 import com.paypal.bfs.test.employeeserv.api.model.Employee;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
@@ -41,13 +44,13 @@ public class EmployeeResourceImpl implements EmployeeResource {
 
     private void handleRequestError(BindingResult result){
         if(result.hasErrors() && result.getFieldErrors()!=null ){
-            StringBuffer errorMessage = new StringBuffer();
-
+            Map<String,String> errors = new HashMap<>();
             for(FieldError error : result.getFieldErrors()){
-                errorMessage.append(error.getField()+" "+error.getDefaultMessage()).append(",");
+                errors.put(
+                        error.getField(),
+                        error.getDefaultMessage());
             }
-            errorMessage.deleteCharAt(errorMessage.length()-1);
-            throw new ValidationException(errorMessage.toString());
+            throw new ValidationException(errors,"Request validation failed");
         }
     }
 }
